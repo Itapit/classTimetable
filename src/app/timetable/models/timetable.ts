@@ -20,17 +20,24 @@ export interface PeriodTemplate {
   periods: Period[];
 }
 
-export interface ClassEntry {
-  periodId: string;
+/** Catalog definition for a class (color-coded) */
+export interface ClassDef {
   subject: string;
   teacher: string;
+  color: string; // hex "#RRGGBB" or "#RGB"
+}
+
+/** A scheduled cell now references a classId + optional room/notes */
+export interface ScheduleEntry {
+  periodId: string;
+  classId: string; // key in TimetableRoot.classes
   room?: string;
   notes?: string;
 }
 
 export interface DaySchedule {
   day: DayOfWeek;
-  classes: ClassEntry[];
+  classes: ScheduleEntry[];
 }
 
 export interface Group {
@@ -44,27 +51,33 @@ export interface Group {
 export interface TimetableRoot {
   version: string;
   periodTemplates: PeriodTemplate[];
+  classes: Record<string, ClassDef>; // NEW
   groups: Group[];
 }
 
-/** View models for the component */
-export interface PeriodHeader {
-  id: string;
-  title: string; // e.g. "Period 1"
+/** ---------- View models for the transposed table (periods as rows) ---------- */
+
+export interface ResolvedCell {
+  subject: string;
+  teacher: string;
+  color: string;
+  room?: string;
+  notes?: string;
+}
+
+export interface PeriodRowT {
+  periodId: string;
+  title: string; // e.g., "Period 1"
   start: string; // "08:00"
   end: string; // "08:45"
+  /** key = dayOfWeek */
+  cells: Record<DayOfWeek, ResolvedCell | null>;
 }
 
-export interface DayRow {
-  day: DayOfWeek;
-  /** key = periodId */
-  cells: Record<string, ClassEntry | null>;
-}
-
-export interface GroupView {
+export interface GroupViewByPeriods {
   groupId: string;
   groupLabel: string;
   templateLabel: string;
-  headers: PeriodHeader[]; // columns in order
-  rows: DayRow[]; // one row per day
+  dayHeaders: DayOfWeek[]; // columns
+  rows: PeriodRowT[]; // periods as rows
 }

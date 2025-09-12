@@ -10,5 +10,5 @@ import { TimetableComponent } from './timetable/timetable.component';
 })
 export class App {
   protected title = 'classTimetable';
-  group = 'B';
+  group = 'A';
 }

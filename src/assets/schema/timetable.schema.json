@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/schedule.schema.json",
-  "title": "Weekly Timetable",
+  "$id": "https://example.com/timetable.schema.json",
+  "title": "Color-Coded Weekly Timetable",
   "type": "object",
-  "required": ["version", "periodTemplates", "groups"],
+  "required": ["version", "periodTemplates", "classes", "groups"],
   "properties": {
     "version": { "type": "string" },
 
@@ -12,6 +12,13 @@
       "minItems": 1,
       "items": { "$ref": "#/$defs/periodTemplate" },
       "uniqueItems": true
+    },
+
+    "classes": {
+      "type": "object",
+      "description": "Dictionary of class definitions keyed by classId.",
+      "propertyNames": { "pattern": "^[A-Za-z0-9_-]+$" },
+      "additionalProperties": { "$ref": "#/$defs/classDef" }
     },
 
     "groups": {
@@ -25,20 +32,21 @@
     "dayOfWeek": {
       "type": "string",
       "enum": [
-        "sunday",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday"
+        "sunday", "monday", "tuesday", "wednesday",
+        "thursday", "friday", "saturday"
       ]
     },
 
     "timeHHMM": {
       "type": "string",
       "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
-      "description": "24h time HH:MM"
+      "description": "24h HH:MM"
+    },
+
+    "hexColor": {
+      "type": "string",
+      "pattern": "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+      "description": "CSS hex color, e.g. #2196F3 or #09f"
     },
 
     "period": {
@@ -68,16 +76,26 @@
       "additionalProperties": false
     },
 
-    "classEntry": {
+    "classDef": {
       "type": "object",
-      "required": ["periodId", "subject", "teacher"],
+      "required": ["subject", "teacher", "color"],
       "properties": {
-        "periodId": {
-          "type": "string",
-          "description": "Must match a period.id in the applied periodTemplate"
-        },
         "subject": { "type": "string" },
         "teacher": { "type": "string" },
+        "color": { "$ref": "#/$defs/hexColor" }
+      },
+      "additionalProperties": false
+    },
+
+    "scheduleEntry": {
+      "type": "object",
+      "required": ["periodId", "classId"],
+      "properties": {
+        "periodId": { "type": "string" },
+        "classId": {
+          "type": "string",
+          "description": "Key in root 'classes' map"
+        },
         "room": { "type": "string" },
         "notes": { "type": "string" }
       },
@@ -91,7 +109,7 @@
         "day": { "$ref": "#/$defs/dayOfWeek" },
         "classes": {
           "type": "array",
-          "items": { "$ref": "#/$defs/classEntry" }
+          "items": { "$ref": "#/$defs/scheduleEntry" }
         }
       },
       "additionalProperties": false
@@ -109,13 +127,13 @@
         },
         "applyTemplateToDays": {
           "type": "array",
-          "description": "Days that use the template’s period times.",
           "items": { "$ref": "#/$defs/dayOfWeek" },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "description": "Days that use the template’s period times."
         },
         "week": {
           "type": "array",
-          "description": "Per-day class assignments by period for this group.",
+          "description": "Per-day schedule for this group.",
           "items": { "$ref": "#/$defs/daySchedule" }
         }
       },

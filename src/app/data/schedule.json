@@ -1,5 +1,5 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "periodTemplates": [
     {
       "id": "std",
@@ -12,6 +12,37 @@
       ]
     }
   ],
+
+  "classes": {
+    "MATH_A": { "subject": "Math", "teacher": "Ms. Cohen", "color": "#4CAF50" },
+    "PHYS_A": {
+      "subject": "Physics",
+      "teacher": "Mr. Levy",
+      "color": "#2196F3"
+    },
+    "HIST_A": {
+      "subject": "History",
+      "teacher": "Ms. Azulay",
+      "color": "#9C27B0"
+    },
+    "ENG_A": {
+      "subject": "English",
+      "teacher": "Mrs. Katz",
+      "color": "#FF9800"
+    },
+    "CS_A": {
+      "subject": "Computer Science",
+      "teacher": "Mr. Bar",
+      "color": "#795548"
+    },
+    "BIO_B": {
+      "subject": "Biology",
+      "teacher": "Dr. Amir",
+      "color": "#E91E63"
+    },
+    "MATH_B": { "subject": "Math", "teacher": "Ms. Cohen", "color": "#4CAF50" }
+  },
+
   "groups": [
     {
       "id": "A",
@@ -29,47 +60,17 @@
         {
           "day": "sunday",
           "classes": [
-            {
-              "periodId": "P1",
-              "subject": "Math",
-              "teacher": "Ms. Cohen",
-              "room": "201"
-            },
-            {
-              "periodId": "P2",
-              "subject": "Physics",
-              "teacher": "Mr. Levy",
-              "room": "201"
-            },
-            {
-              "periodId": "P3",
-              "subject": "History",
-              "teacher": "Ms. Azulay",
-              "room": "201"
-            }
+            { "periodId": "P1", "classId": "MATH_A", "room": "201" },
+            { "periodId": "P2", "classId": "PHYS_A", "room": "201" },
+            { "periodId": "P3", "classId": "HIST_A", "room": "201" }
           ]
         },
         {
           "day": "monday",
           "classes": [
-            {
-              "periodId": "P1",
-              "subject": "English",
-              "teacher": "Mrs. Katz",
-              "room": "1003"
-            },
-            {
-              "periodId": "P2",
-              "subject": "Math",
-              "teacher": "Ms. Cohen",
-              "room": "103"
-            },
-            {
-              "periodId": "P4",
-              "subject": "Computer Science",
-              "teacher": "Mr. Bar",
-              "room": "201"
-            }
+            { "periodId": "P1", "classId": "ENG_A", "room": "1003" },
+            { "periodId": "P2", "classId": "MATH_A", "room": "103" },
+            { "periodId": "P4", "classId": "CS_A", "room": "201" }
           ]
         }
       ]
@@ -90,13 +91,8 @@
         {
           "day": "sunday",
           "classes": [
-            {
-              "periodId": "P1",
-              "subject": "Biology",
-              "teacher": "Dr. Amir",
-              "room": "101"
-            },
-            { "periodId": "P2", "subject": "Math", "teacher": "Ms. Cohen" }
+            { "periodId": "P1", "classId": "BIO_B", "room": "101" },
+            { "periodId": "P2", "classId": "MATH_B" }
           ]
         }
       ]

@@ -4,39 +4,51 @@
 
 <p-table
   *ngIf="view as v; else empty"
-  [value]="v.headers"
+  [value]="v.rows"
   [scrollable]="true"
   scrollHeight="auto"
   responsiveLayout="scroll"
-  [tableStyle]="{ 'min-width': '900px' }"
+  [tableStyle]="{ 'min-width': '940px' }"
   styleClass="timetable-table"
 >
-  <!-- Header: first cell empty, then days -->
+  <!-- Header: first cell = Period column, then Day columns -->
   <ng-template pTemplate="header">
     <tr>
       <th class="sticky-col period-col">Period</th>
-      <th *ngFor="let row of v.rows">
-        {{ row.day | titlecase }}
+      <th *ngFor="let day of v.dayHeaders; trackBy: trackDay" class="day-col">
+        {{ day | titlecase }}
       </th>
     </tr>
   </ng-template>
 
-  <!-- Body: each period row -->
-  <ng-template pTemplate="body" let-period>
+  <ng-template pTemplate="body" let-row>
     <tr>
+      <!-- Period meta (sticky) -->
       <td class="sticky-col period-col">
-        <div class="period-title">{{ period.title }}</div>
-        <div class="period-time">{{ period.start }}–{{ period.end }}</div>
+        <div class="period-title">{{ row.title }}</div>
+        <div class="period-time">{{ row.start }}–{{ row.end }}</div>
       </td>
 
-      <td *ngFor="let row of view?.rows">
-        <ng-container *ngIf="row.cells[period.id] as c; else dash">
-          <div class="cell-title">{{ c.subject }}</div>
-          <div class="cell-sub">
-            {{ c.teacher
-            }}<ng-container *ngIf="c.room"> · {{ c.room }}</ng-container>
+      <!-- One cell per day, color-coded by the class color -->
+      <td *ngFor="let day of view?.dayHeaders; trackBy: trackDay" class="cell">
+        <ng-container *ngIf="row.cells[day] as c; else dash">
+          <div
+            class="class-chip"
+            [ngStyle]="{
+              'background-color': c.color,
+              color: textColorFor(c.color),
+            }"
+            title="{{ c.teacher }}{{ c.room ? ' · ' + c.room : '' }}"
+          >
+            <div class="chip-subject">{{ c.subject }}</div>
+            <div class="chip-meta">
+              {{ c.teacher
+              }}<ng-container *ngIf="c.room"> · {{ c.room }}</ng-container>
+            </div>
           </div>
+          <div class="cell-notes" *ngIf="c.notes">{{ c.notes }}</div>
         </ng-container>
+
         <ng-template #dash><span class="muted">—</span></ng-template>
       </td>
     </tr>

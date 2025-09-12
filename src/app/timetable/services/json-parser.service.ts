@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@angular/core';
 import {
   DayOfWeek,
   Group,
-  GroupView,
-  PeriodHeader,
+  GroupViewByPeriods,
   PeriodTemplate,
+  ResolvedCell,
   TimetableRoot,
-  ClassEntry,
-  DayRow,
+  ScheduleEntry,
+  PeriodRowT,
 } from '../models/timetable';
 import { SCHEDULE_DATA } from '../schedule.token';
 
@@ -21,75 +21,110 @@ const DAY_ORDER: DayOfWeek[] = [
   'saturday',
 ];
 
+function isObject(v: unknown): v is Record<string, unknown> {
+  return !!v && typeof v === 'object' && !Array.isArray(v);
+}
+
 @Injectable({ providedIn: 'root' })
 export class TimetableService {
-  constructor(@Inject(SCHEDULE_DATA) private data: TimetableRoot) {}
+  private data: TimetableRoot;
 
-  getGroupIds(): { id: string; label: string }[] {
-    return this.data.groups.map((g) => ({ id: g.id, label: g.label }));
+  constructor(@Inject(SCHEDULE_DATA) injected: unknown) {
+    if (!isObject(injected)) {
+      throw new Error(
+        'SCHEDULE_DATA is not an object. Check main.ts provider.',
+      );
+    }
+    if (!Array.isArray((injected as any).periodTemplates)) {
+      throw new Error('SCHEDULE_DATA.periodTemplates missing or not array.');
+    }
+    if (!isObject((injected as any).classes)) {
+      throw new Error('SCHEDULE_DATA.classes missing or not object.');
+    }
+    if (!Array.isArray((injected as any).groups)) {
+      throw new Error('SCHEDULE_DATA.groups missing or not array.');
+    }
+    this.data = injected as unknown as TimetableRoot;
   }
 
-  getGroupView(groupId: string): GroupView {
+  /** Build transposed view: periods as rows, days as columns, with class colors resolved */
+  getGroupViewByPeriods(groupId: string): GroupViewByPeriods {
     const group = this.findGroup(this.data.groups, groupId);
     const template = this.findTemplate(
       this.data.periodTemplates,
       group.templateId,
     );
 
+    // Sort periods by time
     const periodsSorted = [...template.periods].sort(
       (a, b) => this.timeToMin(a.start) - this.timeToMin(b.start),
     );
 
-    const headers: PeriodHeader[] = periodsSorted.map((p) => ({
-      id: p.id,
-      title: p.name ?? p.id,
-      start: p.start,
-      end: p.end,
-    }));
+    const allowedDays = (
+      group.applyTemplateToDays?.length ? group.applyTemplateToDays : DAY_ORDER
+    ).slice();
 
-    const allowedDays = new Set(
-      group.applyTemplateToDays?.length ? group.applyTemplateToDays : DAY_ORDER,
-    );
-
-    const dayMap = new Map<DayOfWeek, Map<string, ClassEntry>>();
+    // day -> (periodId -> ScheduleEntry)
+    const dayMap = new Map<DayOfWeek, Map<string, ScheduleEntry>>();
     for (const d of group.week) {
-      if (!allowedDays.has(d.day)) continue;
-      const m = new Map<string, ClassEntry>();
+      if (!allowedDays.includes(d.day)) continue;
+      const m = new Map<string, ScheduleEntry>();
       for (const c of d.classes) m.set(c.periodId, c);
       dayMap.set(d.day, m);
     }
 
-    const rows: DayRow[] = DAY_ORDER.filter((d) => allowedDays.has(d)).map(
-      (day) => {
-        const m = dayMap.get(day) ?? new Map<string, ClassEntry>();
-        const cells: Record<string, ClassEntry | null> = {};
-        for (const h of headers) cells[h.id] = m.get(h.id) ?? null;
-        return { day, cells };
-      },
-    );
+    const rows: PeriodRowT[] = periodsSorted.map((p) => {
+      const cells: Record<DayOfWeek, ResolvedCell | null> = {} as any;
+      for (const day of allowedDays) {
+        const m = dayMap.get(day);
+        const entry = m?.get(p.id);
+        if (!entry) {
+          cells[day] = null;
+          continue;
+        }
+        const def = this.data.classes[entry.classId];
+        if (!def) {
+          // Unknown classId; still render room/notes if you want
+          cells[day] = null;
+          continue;
+        }
+        cells[day] = {
+          subject: def.subject,
+          teacher: def.teacher,
+          color: def.color,
+          room: entry.room,
+          notes: entry.notes,
+        };
+      }
+      return {
+        periodId: p.id,
+        title: p.name ?? p.id,
+        start: p.start,
+        end: p.end,
+        cells,
+      };
+    });
 
     return {
       groupId: group.id,
       groupLabel: group.label,
       templateLabel: template.label,
-      headers,
+      dayHeaders: allowedDays as DayOfWeek[],
       rows,
     };
   }
 
-  // helpers
-  private findGroup(groups: Group[], id: string): Group {
+  // ---- helpers ----
+  private findGroup(groups: Group[], id: string) {
     const g = groups.find((x) => x.id === id);
-    if (!g) throw new Error(`Group '${id}' not found`);
+    if (!g) throw new Error(`Group '${id}' not found in schedule.json`);
     return g;
   }
 
-  private findTemplate(
-    templates: PeriodTemplate[],
-    id: string,
-  ): PeriodTemplate {
+  private findTemplate(templates: PeriodTemplate[], id: string) {
     const t = templates.find((x) => x.id === id);
-    if (!t) throw new Error(`Period template '${id}' not found`);
+    if (!t)
+      throw new Error(`Period template '${id}' not found in schedule.json`);
     return t;
   }
 
