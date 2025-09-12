@@ -17,6 +17,6 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  protected title = 'classTimetable';
+  protected title = 'hello there??';
   selectedGroupId: string | null = null;
 }

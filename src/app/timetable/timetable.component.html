@@ -11,26 +11,31 @@
   [tableStyle]="{ 'min-width': '940px' }"
   styleClass="timetable-table"
 >
-  <!-- Header: first cell = Period column, then Day columns -->
   <ng-template pTemplate="header">
     <tr>
       <th class="sticky-col period-col">Period</th>
-      <th *ngFor="let day of v.dayHeaders; trackBy: trackDay" class="day-col">
+      <th
+        *ngFor="let day of v.dayHeaders; trackBy: trackDay"
+        class="day-col"
+        [class.is-today]="isToday(day)"
+      >
         {{ day | titlecase }}
       </th>
     </tr>
   </ng-template>
 
   <ng-template pTemplate="body" let-row>
-    <tr>
-      <!-- Period meta (sticky) -->
+    <tr [class.is-now-row]="isNowRow(row.periodId)">
       <td class="sticky-col period-col">
         <div class="period-title">{{ row.title }}</div>
         <div class="period-time">{{ row.start }}–{{ row.end }}</div>
       </td>
 
-      <!-- One cell per day, color-coded by the class color -->
-      <td *ngFor="let day of view?.dayHeaders; trackBy: trackDay" class="cell">
+      <td
+        *ngFor="let day of view?.dayHeaders; trackBy: trackDay"
+        class="cell"
+        [class.is-now]="isNowCell(day, row.periodId)"
+      >
         <ng-container *ngIf="row.cells[day] as c; else dash">
           <div
             class="class-chip"
@@ -48,7 +53,6 @@
           </div>
           <div class="cell-notes" *ngIf="c.notes">{{ c.notes }}</div>
         </ng-container>
-
         <ng-template #dash><span class="muted">—</span></ng-template>
       </td>
     </tr>

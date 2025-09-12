@@ -1,13 +1,26 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import { TimetableService } from './services/json-parser.service';
-import { GroupViewByPeriods } from './models/timetable';
+import { DayOfWeek, GroupViewByPeriods } from './models/timetable';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
+
+const DAY_ORDER: DayOfWeek[] = [
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+];
 
 @Component({
   selector: 'app-timetable',
@@ -16,23 +29,44 @@ import { CommonModule } from '@angular/common';
   styleUrl: './timetable.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TimetableComponent implements OnChanges {
+export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
   @Input({ required: true }) groupId!: string;
 
   view: GroupViewByPeriods | null = null;
 
-  constructor(private readonly service: TimetableService) {}
+  nowDay: DayOfWeek | null = null;
+  nowPeriodId: string | null = null;
+
+  private tickId: any;
+
+  constructor(
+    private readonly service: TimetableService,
+    private readonly cdr: ChangeDetectorRef,
+  ) {}
+
+  ngOnInit(): void {
+    // start ticking every 30s to catch period boundaries
+    this.tickId = setInterval(() => {
+      if (this.view) {
+        this.computeNow(this.view);
+        this.cdr.markForCheck();
+      }
+    }, 30_000);
+  }
 
   ngOnChanges(): void {
-    if (!this.groupId) {
+    if (!this.groupId)
       throw new Error('TimetableComponent: groupId input is required');
-    }
     this.view = this.service.getGroupViewByPeriods(this.groupId);
+    this.computeNow(this.view);
+  }
+
+  ngOnDestroy(): void {
+    if (this.tickId) clearInterval(this.tickId);
   }
 
   trackDay = (_: number, d: string) => d;
 
-  /** Choose black/white text for contrast against a hex background */
   textColorFor(bgHex: string): string {
     if (!bgHex) return '#000';
     const hex = bgHex.replace('#', '');
@@ -43,11 +77,59 @@ export class TimetableComponent implements OnChanges {
             .map((c) => c + c)
             .join('')
         : hex.padEnd(6, '0').slice(0, 6);
-    const r = parseInt(full.slice(0, 2), 16);
-    const g = parseInt(full.slice(2, 4), 16);
-    const b = parseInt(full.slice(4, 6), 16);
-    // YIQ luma approximation
+    const r = parseInt(full.slice(0, 2), 16),
+      g = parseInt(full.slice(2, 4), 16),
+      b = parseInt(full.slice(4, 6), 16);
     const yiq = (r * 299 + g * 587 + b * 114) / 1000;
     return yiq >= 128 ? '#000' : '#fff';
+  }
+
+  /** True if this cell is the current lesson */
+  isNowCell(day: DayOfWeek, periodId: string): boolean {
+    return this.nowDay === day && this.nowPeriodId === periodId;
+  }
+
+  /** True if this header day is "today" */
+  isToday(day: DayOfWeek): boolean {
+    return this.nowDay === day;
+  }
+
+  /** True if this row is the current period row */
+  isNowRow(periodId: string): boolean {
+    return this.nowPeriodId === periodId;
+  }
+
+  private computeNow(v: GroupViewByPeriods): void {
+    const jsDay = new Date().getDay(); // 0=Sun .. 6=Sat
+    const today: DayOfWeek = DAY_ORDER[jsDay];
+
+    // Only highlight if today is in the rendered headers
+    if (!v.dayHeaders.includes(today)) {
+      this.nowDay = null;
+      this.nowPeriodId = null;
+      return;
+    }
+
+    const mins = this.nowMinutes();
+
+    // Find the period whose [start,end) contains now
+    const hit = v.rows.find((row) => {
+      const start = this.hhmmToMin(row.start);
+      const end = this.hhmmToMin(row.end);
+      return mins >= start && mins < end;
+    });
+
+    this.nowDay = today;
+    this.nowPeriodId = hit ? hit.periodId : null;
+  }
+
+  private nowMinutes(): number {
+    const d = new Date();
+    return d.getHours() * 60 + d.getMinutes();
+  }
+
+  private hhmmToMin(hhmm: string): number {
+    const [h, m] = hhmm.split(':').map(Number);
+    return h * 60 + m;
   }
 }
