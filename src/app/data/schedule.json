@@ -5,42 +5,66 @@
       "id": "std",
       "label": "Standard Day",
       "periods": [
-        { "id": "P1", "name": "Period 1", "start": "08:00", "end": "08:45" },
-        { "id": "P2", "name": "Period 2", "start": "08:50", "end": "09:35" },
-        { "id": "P3", "name": "Period 3", "start": "09:50", "end": "10:35" },
-        { "id": "P4", "name": "Period 4", "start": "10:40", "end": "11:25" }
+        { "id": "P1", "name": "Period 1", "start": "08:30", "end": "09:15" },
+        { "id": "P2", "name": "Period 2", "start": "09:15", "end": "10:10" },
+        { "id": "P3", "name": "Period 3", "start": "10:10", "end": "10:55" },
+        { "id": "P4", "name": "Period 4", "start": "10:55", "end": "12:05" },
+        { "id": "P5", "name": "Period 5", "start": "12:05", "end": "12:50" },
+        { "id": "P6", "name": "Period 6", "start": "12:50", "end": "13:45" },
+        { "id": "P7", "name": "Period 7", "start": "13:45", "end": "14:30" },
+        { "id": "P8", "name": "Period 8", "start": "14:30", "end": "15:25" },
+        { "id": "P9", "name": "Period 9", "start": "15:25", "end": "16:10" },
+        { "id": "P10", "name": "Period 10", "start": "16:10", "end": "17:00" }
       ]
     }
   ],
 
   "classes": {
-    "MATH_A": { "subject": "Math", "teacher": "Ms. Cohen", "color": "#4CAF50" },
-    "PHYS_A": {
-      "subject": "Physics",
-      "teacher": "Mr. Levy",
-      "color": "#2196F3"
+    "ALGB": {
+      "subject": "אלגברה לינארית",
+      "teacher": "פיש אירן",
+      "color": "#3F51B5"
     },
-    "HIST_A": {
-      "subject": "History",
-      "teacher": "Ms. Azulay",
-      "color": "#9C27B0"
+    "SYS": {
+      "subject": "מערכות הפעלה",
+      "teacher": "קובל שאול",
+      "color": "#1976D2"
     },
-    "ENG_A": {
-      "subject": "English",
-      "teacher": "Mrs. Katz",
-      "color": "#FF9800"
+    "SE": {
+      "subject": "הנדסת תוכנה",
+      "teacher": "אוסטריצב איר",
+      "color": "#8E24AA"
     },
-    "CS_A": {
-      "subject": "Computer Science",
-      "teacher": "Mr. Bar",
-      "color": "#795548"
+    "CYBER": {
+      "subject": "סייבר",
+      "teacher": "גוריאל אלי",
+      "color": "#F4511E"
     },
-    "BIO_B": {
-      "subject": "Biology",
-      "teacher": "Dr. Amir",
-      "color": "#E91E63"
+    "EMBEDDED": {
+      "subject": "מערכות אוטונומיות",
+      "teacher": "רפאלי יקיר",
+      "color": "#5D4037"
     },
-    "MATH_B": { "subject": "Math", "teacher": "Ms. Cohen", "color": "#4CAF50" }
+    "WEB": {
+      "subject": "ווב",
+      "teacher": "עמיר אסף",
+      "color": "#009688"
+    },
+    "AI": {
+      "subject": "למידת מכונה",
+      "teacher": "וינברגר אפרת",
+      "color": "#43A047"
+    },
+    "OOP": {
+      "subject": "מונחה עצמים",
+      "teacher": "גוריאל אלי",
+      "color": "#E53935"
+    },
+    "NETWORKS": {
+      "subject": "תקשורת מחשבים",
+      "teacher": "גורן קובי",
+      "color": "#FFB300"
+    }
   },
 
   "groups": [
@@ -60,17 +84,70 @@
         {
           "day": "sunday",
           "classes": [
-            { "periodId": "P1", "classId": "MATH_A", "room": "201" },
-            { "periodId": "P2", "classId": "PHYS_A", "room": "201" },
-            { "periodId": "P3", "classId": "HIST_A", "room": "201" }
+            { "periodId": "P1", "classId": "SYS", "room": "4009" },
+            { "periodId": "P2", "classId": "SYS", "room": "4009" },
+            { "periodId": "P3", "classId": "SYS", "room": "4009" },
+            { "periodId": "P4", "classId": "SYS", "room": "4009" },
+            { "periodId": "P5", "classId": "SYS", "room": "4009" },
+            { "periodId": "P6", "classId": "SE", "room": "4009" },
+            { "periodId": "P7", "classId": "SE", "room": "4009" },
+            { "periodId": "P8", "classId": "SE", "room": "4009" }
           ]
         },
         {
           "day": "monday",
           "classes": [
-            { "periodId": "P1", "classId": "ENG_A", "room": "1003" },
-            { "periodId": "P2", "classId": "MATH_A", "room": "103" },
-            { "periodId": "P4", "classId": "CS_A", "room": "201" }
+            { "periodId": "P1", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P2", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P3", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P4", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P5", "classId": "CYBER", "room": "4009" },
+            { "periodId": "P6", "classId": "CYBER", "room": "4009" },
+            { "periodId": "P7", "classId": "CYBER", "room": "4009" },
+            { "periodId": "P8", "classId": "CYBER", "room": "4009" }
+          ]
+        },
+        {
+          "day": "tuesday",
+          "classes": []
+        },
+        {
+          "day": "wednesday",
+          "classes": [
+            { "periodId": "P1", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P2", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P3", "classId": "EMBEDDED", "room": "4106" },
+            { "periodId": "P4", "classId": "EMBEDDED", "room": "4106" },
+            { "periodId": "P5", "classId": "EMBEDDED", "room": "4106" },
+            { "periodId": "P6", "classId": "EMBEDDED", "room": "4106" },
+            { "periodId": "P7", "classId": "WEB", "room": "4009" },
+            { "periodId": "P8", "classId": "WEB", "room": "4009" },
+            { "periodId": "P9", "classId": "WEB", "room": "4009" },
+            { "periodId": "P10", "classId": "WEB", "room": "4009" }
+          ]
+        },
+        {
+          "day": "thursday",
+          "classes": [
+            { "periodId": "P1", "classId": "AI", "room": "4011" },
+            { "periodId": "P2", "classId": "AI", "room": "4011" },
+            { "periodId": "P3", "classId": "AI", "room": "4011" },
+            { "periodId": "P4", "classId": "AI", "room": "4011" },
+            { "periodId": "P5", "classId": "OOP", "room": "4009" },
+            { "periodId": "P6", "classId": "OOP", "room": "4009" },
+            { "periodId": "P7", "classId": "OOP", "room": "4009" },
+            { "periodId": "P8", "classId": "OOP", "room": "4009" }
+          ]
+        },
+        {
+          "day": "friday",
+          "classes": [
+            { "periodId": "P1", "classId": "NETWORKS", "room": "4009" },
+            { "periodId": "P2", "classId": "NETWORKS", "room": "4009" },
+            { "periodId": "P3", "classId": "NETWORKS", "room": "4009" },
+            { "periodId": "P4", "classId": "NETWORKS", "room": "4009" },
+            { "periodId": "P5", "classId": "NETWORKS", "room": "4009" },
+            { "periodId": "P6", "classId": "NETWORKS", "room": "4009" }
           ]
         }
       ]
@@ -91,8 +168,70 @@
         {
           "day": "sunday",
           "classes": [
-            { "periodId": "P1", "classId": "BIO_B", "room": "101" },
-            { "periodId": "P2", "classId": "MATH_B" }
+            { "periodId": "P1", "classId": "SYS", "room": "4009" },
+            { "periodId": "P2", "classId": "SYS", "room": "4009" },
+            { "periodId": "P3", "classId": "SYS", "room": "4009" },
+            { "periodId": "P4", "classId": "SYS", "room": "4009" },
+            { "periodId": "P5", "classId": "SYS", "room": "4009" },
+            { "periodId": "P6", "classId": "SE", "room": "4009" },
+            { "periodId": "P7", "classId": "SE", "room": "4009" },
+            { "periodId": "P8", "classId": "SE", "room": "4009" }
+          ]
+        },
+        {
+          "day": "monday",
+          "classes": [
+            { "periodId": "P1", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P2", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P3", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P4", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P5", "classId": "CYBER", "room": "4009" },
+            { "periodId": "P6", "classId": "CYBER", "room": "4009" },
+            { "periodId": "P7", "classId": "CYBER", "room": "4009" },
+            { "periodId": "P8", "classId": "CYBER", "room": "4009" }
+          ]
+        },
+        {
+          "day": "tuesday",
+          "classes": []
+        },
+        {
+          "day": "wednesday",
+          "classes": [
+            { "periodId": "P1", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P2", "classId": "ALGB", "room": "4009" },
+            { "periodId": "P3", "classId": "EMBEDDED", "room": "4009" },
+            { "periodId": "P4", "classId": "EMBEDDED", "room": "4009" },
+            { "periodId": "P5", "classId": "EMBEDDED", "room": "4009" },
+            { "periodId": "P6", "classId": "EMBEDDED", "room": "4009" },
+            { "periodId": "P7", "classId": "WEB", "room": "4106" },
+            { "periodId": "P8", "classId": "WEB", "room": "4106" },
+            { "periodId": "P9", "classId": "WEB", "room": "4106" },
+            { "periodId": "P10", "classId": "WEB", "room": "4106" }
+          ]
+        },
+        {
+          "day": "thursday",
+          "classes": [
+            { "periodId": "P1", "classId": "OOP", "room": "4009" },
+            { "periodId": "P2", "classId": "OOP", "room": "4009" },
+            { "periodId": "P3", "classId": "OOP", "room": "4009" },
+            { "periodId": "P4", "classId": "OOP", "room": "4009" },
+            { "periodId": "P5", "classId": "AI", "room": "4011" },
+            { "periodId": "P6", "classId": "AI", "room": "4011" },
+            { "periodId": "P7", "classId": "AI", "room": "4011" },
+            { "periodId": "P8", "classId": "AI", "room": "4011" }
+          ]
+        },
+        {
+          "day": "friday",
+          "classes": [
+            { "periodId": "P1", "classId": "NETWORKS", "room": "4009" },
+            { "periodId": "P2", "classId": "NETWORKS", "room": "4009" },
+            { "periodId": "P3", "classId": "NETWORKS", "room": "4009" },
+            { "periodId": "P4", "classId": "NETWORKS", "room": "4009" },
+            { "periodId": "P5", "classId": "NETWORKS", "room": "4009" },
+            { "periodId": "P6", "classId": "NETWORKS", "room": "4009" }
           ]
         }
       ]
