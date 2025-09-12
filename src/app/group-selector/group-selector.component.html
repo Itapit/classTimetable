@@ -1,0 +1,15 @@
+<p-selectButton
+  [options]="options"
+  [(ngModel)]="group"
+  (onChange)="onSelect($event.value)"
+  optionLabel="label"
+  optionValue="value"
+  [multiple]="false"
+  [unselectable]="false"
+  ariaLabel="Choose group"
+>
+  <!-- Optional: custom item template -->
+  <ng-template let-opt pTemplate="item">
+    <span>{{ opt.label }}</span>
+  </ng-template>
+</p-selectButton>

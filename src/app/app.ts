@@ -1,14 +1,22 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TitleComponent } from './title/title.component';
 import { TimetableComponent } from './timetable/timetable.component';
+import { GroupSelectorComponent } from './group-selector/group-selector.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [TitleComponent, TimetableComponent],
+  imports: [
+    CommonModule,
+    TitleComponent,
+    TimetableComponent,
+    GroupSelectorComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
   protected title = 'classTimetable';
-  group = 'A';
+  selectedGroupId: string | null = null;
 }

@@ -1,2 +1,10 @@
-<app-title [text]="title"></app-title>
-<app-timetable [groupId]="group"></app-timetable>
+<app-title></app-title>
+<div class="container">
+  <div class="toolbar">
+    <app-group-selector [(group)]="selectedGroupId"></app-group-selector>
+  </div>
+
+  <div class="content" *ngIf="selectedGroupId as gid">
+    <app-timetable [groupId]="gid"></app-timetable>
+  </div>
+</div>

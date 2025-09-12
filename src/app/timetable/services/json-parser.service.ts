@@ -132,4 +132,8 @@ export class TimetableService {
     const [h, m] = hhmm.split(':').map(Number);
     return h * 60 + m;
   }
+
+  getGroupIds(): { id: string; label: string }[] {
+    return this.data.groups.map((g) => ({ id: g.id, label: g.label }));
+  }
 }
