@@ -1,1 +1,48 @@
-<p>timetable works!</p>
+<div class="meta" *ngIf="view as v">
+  <strong>{{ v.groupLabel }}</strong> · {{ v.templateLabel }}
+</div>
+
+<p-table
+  *ngIf="view as v; else empty"
+  [value]="v.headers"
+  [scrollable]="true"
+  scrollHeight="auto"
+  responsiveLayout="scroll"
+  [tableStyle]="{ 'min-width': '900px' }"
+  styleClass="timetable-table"
+>
+  <!-- Header: first cell empty, then days -->
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="sticky-col period-col">Period</th>
+      <th *ngFor="let row of v.rows">
+        {{ row.day | titlecase }}
+      </th>
+    </tr>
+  </ng-template>
+
+  <!-- Body: each period row -->
+  <ng-template pTemplate="body" let-period>
+    <tr>
+      <td class="sticky-col period-col">
+        <div class="period-title">{{ period.title }}</div>
+        <div class="period-time">{{ period.start }}–{{ period.end }}</div>
+      </td>
+
+      <td *ngFor="let row of view?.rows">
+        <ng-container *ngIf="row.cells[period.id] as c; else dash">
+          <div class="cell-title">{{ c.subject }}</div>
+          <div class="cell-sub">
+            {{ c.teacher
+            }}<ng-container *ngIf="c.room"> · {{ c.room }}</ng-container>
+          </div>
+        </ng-container>
+        <ng-template #dash><span class="muted">—</span></ng-template>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<ng-template #empty>
+  <div class="muted">No timetable data</div>
+</ng-template>

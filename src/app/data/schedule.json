@@ -1,0 +1,105 @@
+{
+  "version": "1.0",
+  "periodTemplates": [
+    {
+      "id": "std",
+      "label": "Standard Day",
+      "periods": [
+        { "id": "P1", "name": "Period 1", "start": "08:00", "end": "08:45" },
+        { "id": "P2", "name": "Period 2", "start": "08:50", "end": "09:35" },
+        { "id": "P3", "name": "Period 3", "start": "09:50", "end": "10:35" },
+        { "id": "P4", "name": "Period 4", "start": "10:40", "end": "11:25" }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "id": "A",
+      "label": "Group A",
+      "templateId": "std",
+      "applyTemplateToDays": [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday"
+      ],
+      "week": [
+        {
+          "day": "sunday",
+          "classes": [
+            {
+              "periodId": "P1",
+              "subject": "Math",
+              "teacher": "Ms. Cohen",
+              "room": "201"
+            },
+            {
+              "periodId": "P2",
+              "subject": "Physics",
+              "teacher": "Mr. Levy",
+              "room": "201"
+            },
+            {
+              "periodId": "P3",
+              "subject": "History",
+              "teacher": "Ms. Azulay",
+              "room": "201"
+            }
+          ]
+        },
+        {
+          "day": "monday",
+          "classes": [
+            {
+              "periodId": "P1",
+              "subject": "English",
+              "teacher": "Mrs. Katz",
+              "room": "1003"
+            },
+            {
+              "periodId": "P2",
+              "subject": "Math",
+              "teacher": "Ms. Cohen",
+              "room": "103"
+            },
+            {
+              "periodId": "P4",
+              "subject": "Computer Science",
+              "teacher": "Mr. Bar",
+              "room": "201"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Group B",
+      "templateId": "std",
+      "applyTemplateToDays": [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday"
+      ],
+      "week": [
+        {
+          "day": "sunday",
+          "classes": [
+            {
+              "periodId": "P1",
+              "subject": "Biology",
+              "teacher": "Dr. Amir",
+              "room": "101"
+            },
+            { "periodId": "P2", "subject": "Math", "teacher": "Ms. Cohen" }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schedule.schema.json",
+  "title": "Weekly Timetable",
+  "type": "object",
+  "required": ["version", "periodTemplates", "groups"],
+  "properties": {
+    "version": { "type": "string" },
+
+    "periodTemplates": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/periodTemplate" },
+      "uniqueItems": true
+    },
+
+    "groups": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/group" }
+    }
+  },
+
+  "$defs": {
+    "dayOfWeek": {
+      "type": "string",
+      "enum": [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
+      ]
+    },
+
+    "timeHHMM": {
+      "type": "string",
+      "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+      "description": "24h time HH:MM"
+    },
+
+    "period": {
+      "type": "object",
+      "required": ["id", "start", "end"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" },
+        "name": { "type": "string" },
+        "start": { "$ref": "#/$defs/timeHHMM" },
+        "end": { "$ref": "#/$defs/timeHHMM" }
+      },
+      "additionalProperties": false
+    },
+
+    "periodTemplate": {
+      "type": "object",
+      "required": ["id", "label", "periods"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" },
+        "label": { "type": "string" },
+        "periods": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/period" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "classEntry": {
+      "type": "object",
+      "required": ["periodId", "subject", "teacher"],
+      "properties": {
+        "periodId": {
+          "type": "string",
+          "description": "Must match a period.id in the applied periodTemplate"
+        },
+        "subject": { "type": "string" },
+        "teacher": { "type": "string" },
+        "room": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "daySchedule": {
+      "type": "object",
+      "required": ["day", "classes"],
+      "properties": {
+        "day": { "$ref": "#/$defs/dayOfWeek" },
+        "classes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/classEntry" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "group": {
+      "type": "object",
+      "required": ["id", "label", "templateId", "week"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" },
+        "label": { "type": "string" },
+        "templateId": {
+          "type": "string",
+          "description": "References periodTemplates[].id"
+        },
+        "applyTemplateToDays": {
+          "type": "array",
+          "description": "Days that use the template’s period times.",
+          "items": { "$ref": "#/$defs/dayOfWeek" },
+          "uniqueItems": true
+        },
+        "week": {
+          "type": "array",
+          "description": "Per-day class assignments by period for this group.",
+          "items": { "$ref": "#/$defs/daySchedule" }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "additionalProperties": false
+}
