@@ -1,4 +1,5 @@
 <div class="pony-card">
   <h1 class="pony-title">{{ text }}</h1>
+  <div class="daily-quote" *ngIf="quote">“{{ quote }}”</div>
   <ng-content></ng-content>
 </div>

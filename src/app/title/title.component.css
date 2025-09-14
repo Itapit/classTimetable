@@ -1,3 +1,11 @@
+.daily-quote {
+	margin: 0.5em 0 1.2em 0;
+	font-size: 1.08em;
+	color: #888;
+	font-style: italic;
+	text-align: center;
+	letter-spacing: 0.1px;
+}
 
 
 .pony-title {
