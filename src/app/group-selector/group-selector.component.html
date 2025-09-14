@@ -1,4 +1,6 @@
+<label class="pony-label" for="group-select">Choose your group:</label>
 <p-selectButton
+  id="group-select"
   [options]="options"
   [(ngModel)]="group"
   (onChange)="onSelect($event.value)"
@@ -7,6 +9,7 @@
   [multiple]="false"
   [unselectable]="false"
   ariaLabel="Choose group"
+  styleClass="pony-select"
 >
   <!-- Optional: custom item template -->
   <ng-template let-opt pTemplate="item">

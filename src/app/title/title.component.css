@@ -1,0 +1,11 @@
+
+
+.pony-title {
+	font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+	font-size: 2.2rem;
+	font-weight: 700;
+	color: var(--primary, #23243a);
+	letter-spacing: 0.5px;
+	margin-bottom: 0.5em;
+	padding-bottom: 0.1em;
+}

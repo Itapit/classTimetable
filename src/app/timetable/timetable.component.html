@@ -1,64 +1,73 @@
-<div class="meta" *ngIf="view as v">
-  <strong>{{ v.groupLabel }}</strong> · {{ v.templateLabel }}
-</div>
+<div class="timetable-fullscreen">
+  <div class="meta" *ngIf="filteredView as v">
+    <strong>{{ v.groupLabel }}</strong> · {{ v.templateLabel }}
+  </div>
 
-<p-table
-  *ngIf="view as v; else empty"
-  [value]="v.rows"
-  [scrollable]="true"
-  scrollHeight="auto"
-  responsiveLayout="scroll"
-  [tableStyle]="{ 'min-width': '940px' }"
-  styleClass="timetable-table"
->
-  <ng-template pTemplate="header">
-    <tr>
-      <th class="sticky-col period-col">Period</th>
-      <th
-        *ngFor="let day of v.dayHeaders; trackBy: trackDay"
-        class="day-col"
-        [class.is-today]="isToday(day)"
-      >
-        {{ day | titlecase }}
-      </th>
-    </tr>
-  </ng-template>
+  <div style="margin-bottom: 1em; text-align: right;">
+    <label class="single-day-toggle">
+      <input type="checkbox" [checked]="showTodayOnly" (change)="toggleTodayOnly()" />
+      Show only today
+    </label>
+  </div>
 
-  <ng-template pTemplate="body" let-row>
-    <tr [class.is-now-row]="isNowRow(row.periodId)">
-      <td class="sticky-col period-col">
-        <div class="period-title">{{ row.title }}</div>
-        <div class="period-time">{{ row.start }}–{{ row.end }}</div>
-      </td>
+  <p-table
+    *ngIf="filteredView as v; else empty"
+    [value]="v.rows"
+    [scrollable]="true"
+    scrollHeight="auto"
+    responsiveLayout="scroll"
+    [tableStyle]="{ 'min-width': '940px' }"
+    styleClass="timetable-table pony-timetable"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="sticky-col period-col">Period</th>
+        <th
+          *ngFor="let day of v.dayHeaders; trackBy: trackDay"
+          class="day-col"
+          [class.is-today]="isToday(day)"
+        >
+          {{ day | titlecase }}
+        </th>
+      </tr>
+    </ng-template>
 
-      <td
-        *ngFor="let day of view?.dayHeaders; trackBy: trackDay"
-        class="cell"
-        [class.is-now]="isNowCell(day, row.periodId)"
-      >
-        <ng-container *ngIf="row.cells[day] as c; else dash">
-          <div
-            class="class-chip"
-            [ngStyle]="{
-              'background-color': c.color,
-              color: textColorFor(c.color),
-            }"
-            title="{{ c.teacher }}{{ c.room ? ' · ' + c.room : '' }}"
-          >
-            <div class="chip-subject">{{ c.subject }}</div>
-            <div class="chip-meta">
-              {{ c.teacher
-              }}<ng-container *ngIf="c.room"> · {{ c.room }}</ng-container>
+    <ng-template pTemplate="body" let-row>
+      <tr [class.is-now-row]="isNowRow(row.periodId)">
+        <td class="sticky-col period-col">
+          <div class="period-title">{{ row.title }}</div>
+          <div class="period-time">{{ row.start }}–{{ row.end }}</div>
+        </td>
+
+        <td
+          *ngFor="let day of v.dayHeaders; trackBy: trackDay"
+          class="cell"
+          [class.is-now]="isNowCell(day, row.periodId)"
+        >
+          <ng-container *ngIf="row.cells[day] as c; else dash">
+            <div
+              class="class-chip"
+              [ngStyle]="{
+                'background-color': c.color,
+                color: textColorFor(c.color),
+              }"
+              title="{{ c.teacher }}{{ c.room ? ' · ' + c.room : '' }}"
+            >
+              <div class="chip-subject">{{ c.subject }}</div>
+              <div class="chip-meta">
+                {{ c.teacher
+                }}<ng-container *ngIf="c.room"> · {{ c.room }}</ng-container>
+              </div>
             </div>
-          </div>
-          <div class="cell-notes" *ngIf="c.notes">{{ c.notes }}</div>
-        </ng-container>
-        <ng-template #dash><span class="muted">—</span></ng-template>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+            <div class="cell-notes" *ngIf="c.notes">{{ c.notes }}</div>
+          </ng-container>
+          <ng-template #dash><span class="muted">—</span></ng-template>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 
-<ng-template #empty>
-  <div class="muted">No timetable data</div>
-</ng-template>
+  <ng-template #empty>
+    <div class="muted">No timetable data</div>
+  </ng-template>
+</div>

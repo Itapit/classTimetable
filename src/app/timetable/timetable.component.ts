@@ -8,7 +8,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { TimetableService } from './services/json-parser.service';
-import { DayOfWeek, GroupViewByPeriods } from './models/timetable';
+import { DayOfWeek, GroupViewByPeriods, ResolvedCell } from './models/timetable';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 
@@ -29,13 +29,17 @@ const DAY_ORDER: DayOfWeek[] = [
   styleUrl: './timetable.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
   @Input({ required: true }) groupId!: string;
 
   view: GroupViewByPeriods | null = null;
+  filteredView: GroupViewByPeriods | null = null;
 
   nowDay: DayOfWeek | null = null;
   nowPeriodId: string | null = null;
+
+  showTodayOnly = false;
 
   private tickId: any;
 
@@ -59,10 +63,51 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
       throw new Error('TimetableComponent: groupId input is required');
     this.view = this.service.getGroupViewByPeriods(this.groupId);
     this.computeNow(this.view);
+    this.applyFilter();
   }
 
   ngOnDestroy(): void {
     if (this.tickId) clearInterval(this.tickId);
+  }
+
+  toggleTodayOnly() {
+    this.showTodayOnly = !this.showTodayOnly;
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    if (!this.view) {
+      this.filteredView = null;
+      return;
+    }
+    if (!this.showTodayOnly) {
+      this.filteredView = this.view;
+      return;
+    }
+    // Filter to only today
+    const today = this.nowDay;
+    if (!today || !this.view.dayHeaders.includes(today)) {
+      this.filteredView = null;
+      return;
+    }
+    this.filteredView = {
+      ...this.view,
+      dayHeaders: [today],
+      rows: this.view.rows.map(row => {
+        // Ensure all DayOfWeek keys are present, only today has value, others are null
+        const allDays: DayOfWeek[] = [
+          'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'
+        ];
+        const filteredCells = {} as Record<DayOfWeek, ResolvedCell | null>;
+        for (const d of allDays) {
+          filteredCells[d] = d === today ? row.cells[today] : null;
+        }
+        return {
+          ...row,
+          cells: filteredCells
+        };
+      })
+    };
   }
 
   trackDay = (_: number, d: string) => d;
