@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './title.component.css',
 })
 export class TitleComponent {
-  @Input() text = 'Class Timetable';
+  text = 'הציטוט היומי';
 
   quotes: string[] = [
     'אני בשירותים (ירדן דרורי)',
@@ -20,7 +20,7 @@ export class TitleComponent {
 
   constructor() {
     // Pick a quote based on the day of year for daily rotation
-    const day = Math.floor((Date.now() / 86400000));
+    const day = Math.floor(Date.now() / 86400000);
     this.quote = this.quotes[day % this.quotes.length];
   }
 }

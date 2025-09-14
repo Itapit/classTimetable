@@ -17,6 +17,5 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  protected title = 'daily quote';
   selectedGroupId: string | null = null;
 }
