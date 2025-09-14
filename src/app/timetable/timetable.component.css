@@ -45,7 +45,7 @@
 .pony-timetable {
   background: var(--surface, #fff);
   border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(35,36,58,0.04);
+  box-shadow: 0 2px 12px 0 rgba(35, 36, 58, 0.04);
   border: 1px solid var(--border, #e0e3ea);
   overflow: hidden;
   position: relative;
@@ -56,14 +56,17 @@
   font-size: 1.08em;
 }
 
-.pony-timetable th, .pony-timetable td {
+.pony-timetable th,
+.pony-timetable td {
   border-radius: 0;
   padding: 1.1em 0.8em;
   font-size: inherit;
   border: none;
   color: #444;
   background: var(--surface, #fff);
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .pony-timetable th {
@@ -78,7 +81,7 @@
 
 .pony-timetable .class-chip {
   border-radius: 6px;
-  box-shadow: 0 1px 4px 0 rgba(35,36,58,0.06);
+  box-shadow: 0 1px 4px 0 rgba(35, 36, 58, 0.06);
   font-weight: 500;
   padding: 0.5em 1em;
   margin-bottom: 0.2em;
@@ -86,30 +89,33 @@
   background: #f8f9fb;
   color: #555;
   position: relative;
-  transition: background 0.15s, box-shadow 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    box-shadow 0.15s,
+    color 0.15s;
 }
 .pony-timetable .class-chip:hover {
   background: #f0f2f7;
   color: var(--accent, #3a5ad7);
-  box-shadow: 0 2px 8px 0 rgba(58,90,215,0.10);
+  box-shadow: 0 2px 8px 0 rgba(58, 90, 215, 0.1);
 }
 
 .pony-timetable .chip-subject {
   font-size: 1.08em;
   color: #444;
-  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-family: "Segoe UI", "Roboto", Arial, sans-serif;
 }
 
 .pony-timetable .chip-meta {
   font-size: 0.97em;
-  color: #888;
+  color: #444444;
 }
 
 /* Stronger highlight for current day */
 .pony-timetable th.is-today {
   background: #f0f2f7;
   color: var(--accent, #3a5ad7);
-  box-shadow: 0 2px 8px 0 rgba(58,90,215,0.06);
+  box-shadow: 0 2px 8px 0 rgba(58, 90, 215, 0.06);
   border-bottom: 3px solid var(--accent, #3a5ad7);
   position: relative;
   z-index: 2;
@@ -123,14 +129,14 @@
   background: #f7f8fa;
   color: var(--accent, #3a5ad7);
   font-weight: 600;
-  box-shadow: 0 2px 8px 0 rgba(58,90,215,0.06);
+  box-shadow: 0 2px 8px 0 rgba(58, 90, 215, 0.06);
 }
 
 .pony-timetable .cell.is-now {
   background: #f0f2f7;
   outline: 2px solid var(--accent, #3a5ad7);
   border-radius: 6px;
-  box-shadow: 0 2px 8px 0 rgba(58,90,215,0.06);
+  box-shadow: 0 2px 8px 0 rgba(58, 90, 215, 0.06);
   color: var(--accent, #3a5ad7);
   position: relative;
   z-index: 1;
@@ -144,6 +150,5 @@
   color: var(--accent, #3a5ad7);
 }
 /* existing styles ... */
-
 
 /* Remove old pony/primary highlights for Hello Kitty theme */

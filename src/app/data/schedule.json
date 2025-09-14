@@ -43,7 +43,7 @@
     "EMBEDDED": {
       "subject": "מערכות אוטונומיות",
       "teacher": "רפאלי יקיר",
-      "color": "#5D4037"
+      "color": "#65DA80"
     },
     "WEB": {
       "subject": "ווב",
@@ -200,14 +200,14 @@
           "classes": [
             { "periodId": "P1", "classId": "ALGB", "room": "4009" },
             { "periodId": "P2", "classId": "ALGB", "room": "4009" },
-            { "periodId": "P3", "classId": "EMBEDDED", "room": "4009" },
-            { "periodId": "P4", "classId": "EMBEDDED", "room": "4009" },
-            { "periodId": "P5", "classId": "EMBEDDED", "room": "4009" },
-            { "periodId": "P6", "classId": "EMBEDDED", "room": "4009" },
-            { "periodId": "P7", "classId": "WEB", "room": "4106" },
-            { "periodId": "P8", "classId": "WEB", "room": "4106" },
-            { "periodId": "P9", "classId": "WEB", "room": "4106" },
-            { "periodId": "P10", "classId": "WEB", "room": "4106" }
+            { "periodId": "P3", "classId": "WEB", "room": "4009" },
+            { "periodId": "P4", "classId": "WEB", "room": "4009" },
+            { "periodId": "P5", "classId": "WEB", "room": "4009" },
+            { "periodId": "P6", "classId": "WEB", "room": "4009" },
+            { "periodId": "P7", "classId": "EMBEDDED", "room": "4106" },
+            { "periodId": "P8", "classId": "EMBEDDED", "room": "4106" },
+            { "periodId": "P9", "classId": "EMBEDDED", "room": "4106" },
+            { "periodId": "P10", "classId": "EMBEDDED", "room": "4106" }
           ]
         },
         {
