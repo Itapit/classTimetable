@@ -1,11 +1,11 @@
 <div class="timetable-fullscreen">
-  <div class="meta" *ngIf="filteredView as v">
-    <strong>{{ v.groupLabel }}</strong> · {{ v.templateLabel }}
-  </div>
-
-  <div style="margin-bottom: 1em; text-align: right;">
+  <div style="margin-bottom: 1em; text-align: right">
     <label class="single-day-toggle">
-      <input type="checkbox" [checked]="showTodayOnly" (change)="toggleTodayOnly()" />
+      <input
+        type="checkbox"
+        [checked]="showTodayOnly"
+        (change)="toggleTodayOnly()"
+      />
       Show only today
     </label>
   </div>
@@ -17,7 +17,9 @@
     scrollHeight="auto"
     responsiveLayout="scroll"
     [tableStyle]="{ 'min-width': '940px' }"
-    [styleClass]="'timetable-table pony-timetable' + (showTodayOnly ? ' single-day' : '')"
+    [styleClass]="
+      'timetable-table pony-timetable' + (showTodayOnly ? ' single-day' : '')
+    "
   >
     <ng-template pTemplate="header">
       <tr>
