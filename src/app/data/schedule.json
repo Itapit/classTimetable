@@ -23,22 +23,22 @@
     "ALGB": {
       "subject": "אלגברה לינארית",
       "teacher": "פיש אירן",
-      "color": "#3F51B5"
+      "color": "#DBB124"
     },
     "SYS": {
       "subject": "מערכות הפעלה",
       "teacher": "קובל שאול",
-      "color": "#1976D2"
+      "color": "#5b6cc7"
     },
     "SE": {
       "subject": "הנדסת תוכנה",
       "teacher": "אוסטריצב איר",
-      "color": "#8E24AA"
+      "color": "#C6C476"
     },
     "CYBER": {
       "subject": "סייבר",
       "teacher": "גוריאל אלי",
-      "color": "#F4511E"
+      "color": "#f5673b"
     },
     "EMBEDDED": {
       "subject": "מערכות אוטונומיות",
@@ -58,12 +58,12 @@
     "OOP": {
       "subject": "מונחה עצמים",
       "teacher": "גוריאל אלי",
-      "color": "#E53935"
+      "color": "#e07272"
     },
     "NETWORKS": {
       "subject": "תקשורת מחשבים",
       "teacher": "גורן קובי",
-      "color": "#FFB300"
+      "color": "#50ABDC"
     }
   },
 
