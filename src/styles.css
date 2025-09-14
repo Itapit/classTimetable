@@ -23,6 +23,7 @@ body {
 	color: var(--text-main);
 	box-sizing: border-box;
 	transition: background 0.5s;
+	direction: rtl;
 }
 
 .pony-container, .pony-card {

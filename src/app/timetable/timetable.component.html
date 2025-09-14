@@ -17,7 +17,7 @@
     scrollHeight="auto"
     responsiveLayout="scroll"
     [tableStyle]="{ 'min-width': '940px' }"
-    styleClass="timetable-table pony-timetable"
+    [styleClass]="'timetable-table pony-timetable' + (showTodayOnly ? ' single-day' : '')"
   >
     <ng-template pTemplate="header">
       <tr>

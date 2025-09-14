@@ -1,3 +1,15 @@
+/* Responsive: single day view cells smaller for mobile */
+@media (max-width: 600px) {
+  .pony-timetable.single-day th,
+  .pony-timetable.single-day td {
+    padding: 0.5em 0.2em;
+    font-size: 0.98em;
+  }
+  .pony-timetable.single-day .class-chip {
+    padding: 0.3em 0.5em;
+    font-size: 0.95em;
+  }
+}
 .timetable-fullscreen {
   width: 100vw;
   min-height: 100vh;
