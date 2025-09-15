@@ -236,7 +236,9 @@
         },
         {
           "day": "tuesday",
-          "classes": []
+          "classes": [
+            { "periodId": "B2", "classId": "BaseFood", "room": "Tzrifin 108" }
+          ]
         },
         {
           "day": "wednesday",
