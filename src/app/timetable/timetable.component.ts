@@ -31,6 +31,8 @@ const DAY_ORDER: DayOfWeek[] = [
 })
 
 export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
+  nextBreakMinutes: number | null = null;
+  nextBreakLabel: string | null = null;
   @Input({ required: true }) groupId!: string;
 
   view: GroupViewByPeriods | null = null;
@@ -49,13 +51,21 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // start ticking every 30s to catch period boundaries
+    // start ticking every 30s to catch period boundaries and update break timer
     this.tickId = setInterval(() => {
       if (this.view) {
         this.computeNow(this.view);
+        this.updateNextBreak();
         this.cdr.markForCheck();
       }
     }, 30_000);
+    // Also update immediately
+    setTimeout(() => {
+      if (this.view) {
+        this.updateNextBreak();
+        this.cdr.markForCheck();
+      }
+    }, 0);
   }
 
   ngOnChanges(): void {
@@ -64,6 +74,46 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
     this.view = this.service.getGroupViewByPeriods(this.groupId);
     this.computeNow(this.view);
     this.applyFilter();
+    this.updateNextBreak();
+  }
+  /** Compute time (in minutes) until the next break, and label for next break */
+  updateNextBreak() {
+    if (!this.view || !this.nowDay) {
+      this.nextBreakMinutes = null;
+      this.nextBreakLabel = null;
+      return;
+    }
+    const mins = this.nowMinutes();
+    // Find the current and next period
+    const todayRows = this.view.rows;
+    let foundCurrent = false;
+    let nextBreakStart: number | null = null;
+    let nextBreakLabel: string | null = null;
+    for (let i = 0; i < todayRows.length; ++i) {
+      const row = todayRows[i];
+      const start = this.hhmmToMin(row.start);
+      const end = this.hhmmToMin(row.end);
+      if (mins >= start && mins < end) {
+        foundCurrent = true;
+        // Next break is after this period, unless this is the last period
+        if (i + 1 < todayRows.length) {
+          const nextRow = todayRows[i + 1];
+          nextBreakStart = this.hhmmToMin(nextRow.start);
+          nextBreakLabel = nextRow.title;
+        } else {
+          nextBreakStart = null;
+          nextBreakLabel = null;
+        }
+        break;
+      }
+    }
+    if (foundCurrent && nextBreakStart != null) {
+      this.nextBreakMinutes = nextBreakStart - mins;
+      this.nextBreakLabel = nextBreakLabel;
+    } else {
+      this.nextBreakMinutes = null;
+      this.nextBreakLabel = null;
+    }
   }
 
   ngOnDestroy(): void {

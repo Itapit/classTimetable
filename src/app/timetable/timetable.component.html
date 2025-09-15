@@ -1,4 +1,7 @@
 <div class="timetable-fullscreen">
+  <div *ngIf="nextBreakMinutes !== null && nextBreakMinutes > 0" class="next-break-timer">
+    <span>הפסקה בעוד {{ nextBreakMinutes }} דקות ({{ nextBreakLabel }})</span>
+  </div>
   <div style="margin-bottom: 1em; text-align: right">
     <label class="single-day-toggle">
       <input

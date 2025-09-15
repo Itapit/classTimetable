@@ -1,3 +1,16 @@
+/* Next break timer styling */
+.next-break-timer {
+  text-align: center;
+  font-size: 1.12em;
+  color: var(--accent, #3a5ad7);
+  background: #f0f2f7;
+  border-radius: 8px;
+  margin: 1.2em auto 1em auto;
+  padding: 0.6em 1.2em;
+  max-width: 340px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
 /* Responsive: single day view cells smaller for mobile */
 @media (max-width: 600px) {
   .pony-timetable.single-day th,
