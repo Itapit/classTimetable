@@ -15,12 +15,7 @@ export class TitleComponent {
 
   constructor() {
     // Pick a quote based on the day of year for daily rotation
-<<<<<<< Updated upstream
     const day = Math.floor(Date.now() / 86400000);
-    this.quote = this.quotes[day % this.quotes.length];
-=======
-    const day = Math.floor((Date.now() / 86400000));
     this.quote = DAILY_QUOTES[day % DAILY_QUOTES.length];
->>>>>>> Stashed changes
   }
 }
