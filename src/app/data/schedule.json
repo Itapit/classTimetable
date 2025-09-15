@@ -79,7 +79,7 @@
     },
     "BREAK": {
       "subject": "הפסקה",
-      "color": "#50ABDC"
+      "color": "#59C9A5"
     }
   },
 
@@ -148,6 +148,7 @@
             { "periodId": "P7", "classId": "WEB", "room": "4009" },
             { "periodId": "P8", "classId": "WEB", "room": "4009" },
             { "periodId": "P9", "classId": "WEB", "room": "4009" },
+            { "periodId": "B4", "classId": "BREAK" },
             { "periodId": "P10", "classId": "WEB", "room": "4009" }
           ]
         },
@@ -246,6 +247,7 @@
             { "periodId": "P7", "classId": "EMBEDDED", "room": "4106" },
             { "periodId": "P8", "classId": "EMBEDDED", "room": "4106" },
             { "periodId": "P9", "classId": "EMBEDDED", "room": "4106" },
+            { "periodId": "B4", "classId": "BREAK" },
             { "periodId": "P10", "classId": "EMBEDDED", "room": "4106" }
           ]
         },
