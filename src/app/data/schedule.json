@@ -80,6 +80,10 @@
     "BREAK": {
       "subject": "הפסקה",
       "color": "#59C9A5"
+    },
+    "BaseFood": {
+      "subject": "אוכל בסיס",
+      "color": "#ff6730"
     }
   },
 
@@ -131,7 +135,9 @@
         },
         {
           "day": "tuesday",
-          "classes": []
+          "classes": [
+            { "periodId": "B2", "classId": "Base Food", "room": "Tzrifin 108" }
+          ]
         },
         {
           "day": "wednesday",
