@@ -268,11 +268,11 @@
             { "periodId": "P3", "classId": "OOP", "room": "4009" },
             { "periodId": "P4", "classId": "OOP", "room": "4009" },
             { "periodId": "B2", "classId": "BREAK" },
-            { "periodId": "P5", "classId": "AI", "room": "4011" },
-            { "periodId": "P6", "classId": "AI", "room": "4011" },
+            { "periodId": "P5", "classId": "AI", "room": "4106" },
+            { "periodId": "P6", "classId": "AI", "room": "4106" },
             { "periodId": "B3", "classId": "BREAK" },
-            { "periodId": "P7", "classId": "AI", "room": "4011" },
-            { "periodId": "P8", "classId": "AI", "room": "4011" }
+            { "periodId": "P7", "classId": "AI", "room": "4106" },
+            { "periodId": "P8", "classId": "AI", "room": "4106" }
           ]
         },
         {
