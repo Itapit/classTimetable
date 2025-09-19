@@ -1,5 +1,8 @@
 <div class="timetable-fullscreen">
-  <div *ngIf="nextBreakMinutes !== null && nextBreakMinutes > 0" class="next-break-timer">
+  <div
+    *ngIf="nextBreakMinutes !== null && nextBreakMinutes > 0"
+    class="next-break-timer"
+  >
     <span>הפסקה בעוד {{ nextBreakMinutes }} דקות ({{ nextBreakLabel }})</span>
   </div>
   <div style="margin-bottom: 1em; text-align: right">
@@ -19,7 +22,7 @@
     [scrollable]="true"
     scrollHeight="auto"
     responsiveLayout="scroll"
-    [tableStyle]="{ 'min-width': '940px' }"
+    [tableStyle]="showTodayOnly ? { 'min-width': '0', width: '100%' } : { 'min-width': '940px' }"
     [styleClass]="
       'timetable-table pony-timetable' + (showTodayOnly ? ' single-day' : '')
     "

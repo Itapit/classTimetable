@@ -1,3 +1,7 @@
+// Cordova Local Notification (for ongoing/live notification)
+declare var cordova: any;
+// Capacitor Local Notifications
+import { LocalNotifications } from '@capacitor/local-notifications';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -8,7 +12,11 @@ import {
   OnInit,
 } from '@angular/core';
 import { TimetableService } from './services/json-parser.service';
-import { DayOfWeek, GroupViewByPeriods, ResolvedCell } from './models/timetable';
+import {
+  DayOfWeek,
+  GroupViewByPeriods,
+  ResolvedCell,
+} from './models/timetable';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 
@@ -29,8 +37,8 @@ const DAY_ORDER: DayOfWeek[] = [
   styleUrl: './timetable.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
+  private ongoingNotifInterval: any;
   nextBreakMinutes: number | null = null;
   nextBreakLabel: string | null = null;
   @Input({ required: true }) groupId!: string;
@@ -50,7 +58,15 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    // Request notification permission
+    try {
+      await LocalNotifications.requestPermissions();
+    } catch (e) {}
+
+    // Schedule notifications for today's breaks
+    this.scheduleBreakNotifications();
+
     // start ticking every 30s to catch period boundaries and update break timer
     this.tickId = setInterval(() => {
       if (this.view) {
@@ -66,15 +82,71 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
         this.cdr.markForCheck();
       }
     }, 0);
+
+    // Start ongoing notification updates (every minute)
+    this.ongoingNotifInterval = setInterval(() => {
+      this.updateOngoingNotification();
+    }, 60_000);
+    // Also update immediately
+    setTimeout(() => this.updateOngoingNotification(), 1000);
+  }
+  /** Schedule notifications for all breaks today */
+  async scheduleBreakNotifications() {
+    if (!this.view || !this.nowDay) return;
+    const now = new Date();
+    const todayRows = this.view.rows;
+    // Remove all previous notifications
+    try {
+      await LocalNotifications.cancel({ notifications: [] });
+    } catch (e) {}
+    let id = 1;
+    for (let i = 0; i < todayRows.length; ++i) {
+      const row = todayRows[i];
+      const isBreak =
+        /^B\d+$/i.test(row.periodId) || /break|הפסקה/i.test(row.title);
+      if (isBreak) {
+        // Schedule notification for break start
+        const [h, m] = row.start.split(":").map(Number);
+        const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0);
+        if (startDate > now) {
+          await LocalNotifications.schedule({
+            notifications: [
+              {
+                id: id++,
+                title: 'Break started',
+                body: `${row.title} started!`,
+                schedule: { at: startDate },
+              },
+            ],
+          });
+        }
+        // Schedule notification for break end (if next period exists)
+        const [eh, em] = row.end.split(":").map(Number);
+        const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), eh, em, 0, 0);
+        if (endDate > now) {
+          await LocalNotifications.schedule({
+            notifications: [
+              {
+                id: id++,
+                title: 'Break ended',
+                body: `${row.title} ended!`,
+                schedule: { at: endDate },
+              },
+            ],
+          });
+        }
+      }
+    }
   }
 
-  ngOnChanges(): void {
+  async ngOnChanges(): Promise<void> {
     if (!this.groupId)
       throw new Error('TimetableComponent: groupId input is required');
     this.view = this.service.getGroupViewByPeriods(this.groupId);
     this.computeNow(this.view);
     this.applyFilter();
     this.updateNextBreak();
+    await this.scheduleBreakNotifications();
   }
   /** Compute time (in minutes) until the next break, and label for next break */
   updateNextBreak() {
@@ -111,8 +183,7 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
       const row = todayRows[i];
       // Heuristic: break if periodId starts with 'B', or title/name includes 'break' or 'הפסקה', or if all cells for this row have subject 'הפסקה' or classId 'BREAK'
       const isBreak =
-        /^B\d+$/i.test(row.periodId) ||
-        /break|הפסקה/i.test(row.title);
+        /^B\d+$/i.test(row.periodId) || /break|הפסקה/i.test(row.title);
       if (isBreak) {
         nextBreakStart = this.hhmmToMin(row.start);
         nextBreakLabel = row.title;
@@ -130,6 +201,56 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.tickId) clearInterval(this.tickId);
+    if (this.ongoingNotifInterval) clearInterval(this.ongoingNotifInterval);
+    // Clear ongoing notification
+    const win: any = window;
+    if (win.cordova && win.cordova.plugins && win.cordova.plugins.notification && win.cordova.plugins.notification.local) {
+      win.cordova.plugins.notification.local.clear(9999);
+    }
+  }
+
+  /** Show/update an ongoing notification with current period/break info */
+  updateOngoingNotification() {
+  const win: any = window;
+  if (!(win.cordova && win.cordova.plugins && win.cordova.plugins.notification && win.cordova.plugins.notification.local)) return;
+    if (!this.view || !this.nowDay) return;
+    const mins = this.nowMinutes();
+    const todayRows = this.view.rows;
+    let currentRow = null;
+    for (let i = 0; i < todayRows.length; ++i) {
+      const row = todayRows[i];
+      const start = this.hhmmToMin(row.start);
+      const end = this.hhmmToMin(row.end);
+      if (mins >= start && mins < end) {
+        currentRow = row;
+        break;
+      }
+    }
+    if (!currentRow) {
+      // Not in any period/break
+      cordova.plugins.notification.local.clear(9999);
+      return;
+    }
+    const start = this.hhmmToMin(currentRow.start);
+    const end = this.hhmmToMin(currentRow.end);
+    const elapsed = mins - start;
+    const left = end - mins;
+    const isBreak = /^B\d+$/i.test(currentRow.periodId) || /break|הפסקה/i.test(currentRow.title);
+    const title = isBreak ? `Break: ${currentRow.title}` : `Period: ${currentRow.title}`;
+    const body = isBreak
+      ? `Break ongoing. ${elapsed} min passed, ${left} min left.`
+      : `Lesson ongoing. ${elapsed} min passed, ${left} min left.`;
+    cordova.plugins.notification.local.schedule({
+      id: 9999,
+      title,
+      text: body,
+      foreground: true,
+      ongoing: true,
+      smallIcon: 'res://ic_stat_notify',
+      icon: 'res://ic_stat_notify',
+      priority: 2,
+      channel: 'ongoing',
+    });
   }
 
   toggleTodayOnly() {
@@ -155,10 +276,16 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
     this.filteredView = {
       ...this.view,
       dayHeaders: [today],
-      rows: this.view.rows.map(row => {
+      rows: this.view.rows.map((row) => {
         // Ensure all DayOfWeek keys are present, only today has value, others are null
         const allDays: DayOfWeek[] = [
-          'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'
+          'sunday',
+          'monday',
+          'tuesday',
+          'wednesday',
+          'thursday',
+          'friday',
+          'saturday',
         ];
         const filteredCells = {} as Record<DayOfWeek, ResolvedCell | null>;
         for (const d of allDays) {
@@ -166,9 +293,9 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
         }
         return {
           ...row,
-          cells: filteredCells
+          cells: filteredCells,
         };
-      })
+      }),
     };
   }
 
