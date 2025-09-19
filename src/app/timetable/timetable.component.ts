@@ -84,30 +84,42 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
       return;
     }
     const mins = this.nowMinutes();
-    // Find the current and next period
     const todayRows = this.view.rows;
     let foundCurrent = false;
-    let nextBreakStart: number | null = null;
-    let nextBreakLabel: string | null = null;
+    let currentIdx = -1;
+    // Find the current period index
     for (let i = 0; i < todayRows.length; ++i) {
       const row = todayRows[i];
       const start = this.hhmmToMin(row.start);
       const end = this.hhmmToMin(row.end);
       if (mins >= start && mins < end) {
         foundCurrent = true;
-        // Next break is after this period, unless this is the last period
-        if (i + 1 < todayRows.length) {
-          const nextRow = todayRows[i + 1];
-          nextBreakStart = this.hhmmToMin(nextRow.start);
-          nextBreakLabel = nextRow.title;
-        } else {
-          nextBreakStart = null;
-          nextBreakLabel = null;
-        }
+        currentIdx = i;
         break;
       }
     }
-    if (foundCurrent && nextBreakStart != null) {
+    if (!foundCurrent) {
+      this.nextBreakMinutes = null;
+      this.nextBreakLabel = null;
+      return;
+    }
+
+    // Find the next break period after the current period
+    let nextBreakStart: number | null = null;
+    let nextBreakLabel: string | null = null;
+    for (let i = currentIdx + 1; i < todayRows.length; ++i) {
+      const row = todayRows[i];
+      // Heuristic: break if periodId starts with 'B', or title/name includes 'break' or 'הפסקה', or if all cells for this row have subject 'הפסקה' or classId 'BREAK'
+      const isBreak =
+        /^B\d+$/i.test(row.periodId) ||
+        /break|הפסקה/i.test(row.title);
+      if (isBreak) {
+        nextBreakStart = this.hhmmToMin(row.start);
+        nextBreakLabel = row.title;
+        break;
+      }
+    }
+    if (nextBreakStart != null) {
       this.nextBreakMinutes = nextBreakStart - mins;
       this.nextBreakLabel = nextBreakLabel;
     } else {
