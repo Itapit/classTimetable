@@ -6,7 +6,7 @@ import scheduleJson from './app/data/schedule.json';
 import { SCHEDULE_DATA } from './app/timetable/schedule.token';
 
 const scheduleData: unknown = (scheduleJson as any)?.default ?? scheduleJson;
-
+// h
 bootstrapApplication(App, {
   ...appConfig,
   providers: [
