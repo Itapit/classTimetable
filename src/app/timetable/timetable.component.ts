@@ -185,6 +185,19 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
       return;
     }
 
+    const currentRow = todayRows[currentIdx];
+    const isCurrentBreak = /^B\d+$/i.test(currentRow.periodId) || /break|הפסקה/i.test(currentRow.title);
+
+    // If we're currently in a break, show time remaining in this break
+    if (isCurrentBreak) {
+      const breakEnd = this.hhmmToSeconds(currentRow.end);
+      const totalSeconds = breakEnd - currentSeconds;
+      this.nextBreakMinutes = Math.floor(totalSeconds / 60);
+      this.nextBreakSeconds = totalSeconds % 60;
+      this.nextBreakLabel = currentRow.title;
+      return;
+    }
+
     // Find the next break period after the current period
     let nextBreakStart: number | null = null;
     let nextBreakLabel: string | null = null;
@@ -211,7 +224,7 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  /** Compute time until the end of the school day */
+  /** Compute time until the end of the school day (excluding break periods) */
   updateEndOfDayTimer() {
     if (!this.view || !this.nowDay) {
       this.endOfDayHours = null;
@@ -230,9 +243,24 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
       return;
     }
 
-    // Find the last period of the day
-    const lastPeriod = todayRows[todayRows.length - 1];
-    const endOfDaySeconds = this.hhmmToSeconds(lastPeriod.end);
+    // Find the last SCHEDULED period for today (not just last in template)
+    let lastScheduledPeriod = null;
+    for (let i = todayRows.length - 1; i >= 0; i--) {
+      if (todayRows[i].cells[this.nowDay] !== null) {
+        lastScheduledPeriod = todayRows[i];
+        break;
+      }
+    }
+
+    if (!lastScheduledPeriod) {
+      // No classes scheduled for today
+      this.endOfDayHours = null;
+      this.endOfDayMinutes = null;
+      this.endOfDaySeconds = null;
+      return;
+    }
+
+    const endOfDaySeconds = this.hhmmToSeconds(lastScheduledPeriod.end);
 
     if (currentSeconds >= endOfDaySeconds) {
       // School day has ended
@@ -242,10 +270,45 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
       return;
     }
 
-    const totalSeconds = endOfDaySeconds - currentSeconds;
-    this.endOfDayHours = Math.floor(totalSeconds / 3600);
-    this.endOfDayMinutes = Math.floor((totalSeconds % 3600) / 60);
-    this.endOfDaySeconds = totalSeconds % 60;
+    // Calculate remaining time including breaks (but only for scheduled periods)
+    let totalRemainingSeconds = 0;
+
+    for (let i = 0; i < todayRows.length; ++i) {
+      const row = todayRows[i];
+
+      // Skip periods not scheduled for today
+      if (row.cells[this.nowDay] === null) {
+        continue;
+      }
+
+      const start = this.hhmmToSeconds(row.start);
+      const end = this.hhmmToSeconds(row.end);
+
+      // Skip periods that have already ended
+      if (end <= currentSeconds) {
+        continue;
+      }
+
+      // Count all scheduled periods (including breaks)
+      // If the period has already started, count only the remaining time
+      if (start <= currentSeconds) {
+        totalRemainingSeconds += end - currentSeconds;
+      } else {
+        // Period hasn't started yet, count the full duration
+        totalRemainingSeconds += end - start;
+      }
+    }
+
+    if (totalRemainingSeconds <= 0) {
+      this.endOfDayHours = null;
+      this.endOfDayMinutes = null;
+      this.endOfDaySeconds = null;
+      return;
+    }
+
+    this.endOfDayHours = Math.floor(totalRemainingSeconds / 3600);
+    this.endOfDayMinutes = Math.floor((totalRemainingSeconds % 3600) / 60);
+    this.endOfDaySeconds = totalRemainingSeconds % 60;
   }
 
   ngOnDestroy(): void {
