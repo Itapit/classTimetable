@@ -198,11 +198,17 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
       return;
     }
 
-    // Find the next break period after the current period
+    // Find the next break period after the current period (only scheduled breaks)
     let nextBreakStart: number | null = null;
     let nextBreakLabel: string | null = null;
     for (let i = currentIdx + 1; i < todayRows.length; ++i) {
       const row = todayRows[i];
+
+      // Skip periods not scheduled for today
+      if (row.cells[this.nowDay] === null) {
+        continue;
+      }
+
       // Heuristic: break if periodId starts with 'B', or title/name includes 'break' or 'הפסקה', or if all cells for this row have subject 'הפסקה' or classId 'BREAK'
       const isBreak =
         /^B\d+$/i.test(row.periodId) || /break|הפסקה/i.test(row.title);
@@ -428,6 +434,32 @@ export class TimetableComponent implements OnChanges, OnInit, OnDestroy {
       b = parseInt(full.slice(4, 6), 16);
     const yiq = (r * 299 + g * 587 + b * 114) / 1000;
     return yiq >= 128 ? '#000' : '#fff';
+  }
+
+  /** Adjust color for dark mode - mute bright colors and ensure readability */
+  adjustColorForDarkMode(color: string): string {
+    if (!document.body.classList.contains('dark-mode')) {
+      return color;
+    }
+
+    const hex = color.replace('#', '');
+    const full =
+      hex.length === 3
+        ? hex.split('').map((c) => c + c).join('')
+        : hex.padEnd(6, '0').slice(0, 6);
+
+    let r = parseInt(full.slice(0, 2), 16);
+    let g = parseInt(full.slice(2, 4), 16);
+    let b = parseInt(full.slice(4, 6), 16);
+
+    // Reduce saturation and brightness for dark mode
+    // Convert to HSL-like adjustment
+    const factor = 0.6; // Mute factor
+    r = Math.floor(r * factor);
+    g = Math.floor(g * factor);
+    b = Math.floor(b * factor);
+
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   }
 
   /** True if this cell is the current lesson */

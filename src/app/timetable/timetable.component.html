@@ -62,7 +62,7 @@
             <div
               class="class-chip"
               [ngStyle]="{
-                'background-color': c.color,
+                'background-color': adjustColorForDarkMode(c.color),
                 color: textColorFor(c.color),
               }"
               title="{{ c.teacher }}{{ c.room ? ' · ' + c.room : '' }}"
