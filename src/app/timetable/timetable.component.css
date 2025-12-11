@@ -5,11 +5,37 @@
   color: var(--accent, #3a5ad7);
   background: #f0f2f7;
   border-radius: 8px;
-  margin: 1.2em auto 1em auto;
+  margin: 1.2em auto 0.5em auto;
   padding: 0.6em 1.2em;
   max-width: 340px;
   font-weight: 600;
   letter-spacing: 0.1px;
+  transition: background 0.3s, color 0.3s;
+}
+
+:host-context(body.dark-mode) .next-break-timer {
+  background: #2a2b35 !important;
+  color: var(--accent) !important;
+}
+
+/* End of day timer styling */
+.end-of-day-timer {
+  text-align: center;
+  font-size: 1.12em;
+  color: #2d8659;
+  background: #e8f5ef;
+  border-radius: 8px;
+  margin: 0.5em auto 1em auto;
+  padding: 0.6em 1.2em;
+  max-width: 340px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  transition: background 0.3s, color 0.3s;
+}
+
+:host-context(body.dark-mode) .end-of-day-timer {
+  background: #2a2b35 !important;
+  color: #6dbf8f !important;
 }
 /* Responsive: single day view cells smaller for mobile */
 @media (max-width: 600px) {
@@ -51,6 +77,11 @@
     padding: 0.8em 0.5em;
     max-width: 98vw;
   }
+  .end-of-day-timer {
+    font-size: 1.18em;
+    padding: 0.8em 0.5em;
+    max-width: 98vw;
+  }
 }
 
 @media (max-width: 400px) {
@@ -67,6 +98,10 @@
     min-height: 2em;
   }
   .next-break-timer {
+    font-size: 1.08em;
+    padding: 0.7em 0.2em;
+  }
+  .end-of-day-timer {
     font-size: 1.08em;
     padding: 0.7em 0.2em;
   }
@@ -116,6 +151,12 @@
   width: 98vw;
   max-width: 1200px;
   font-size: 1.08em;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+:host-context(body.dark-mode) .pony-timetable {
+  color: var(--text-main) !important;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
 .pony-timetable th,
@@ -127,9 +168,14 @@
   color: #444;
   background: var(--surface, #fff);
   transition:
-    background 0.15s,
-    color 0.15s;
+    background 0.3s,
+    color 0.3s;
   touch-action: manipulation;
+}
+
+:host-context(body.dark-mode) .pony-timetable th,
+:host-context(body.dark-mode) .pony-timetable td {
+  color: var(--text-main) !important;
 }
 
 .pony-timetable th {
@@ -140,6 +186,10 @@
   border-bottom: 2px solid var(--border, #e0e3ea);
   position: relative;
   text-align: center;
+}
+
+:host-context(body.dark-mode) .pony-timetable th {
+  color: var(--text-main) !important;
 }
 
 .pony-timetable .class-chip {
@@ -153,9 +203,10 @@
   color: #555;
   position: relative;
   transition:
-    background 0.15s,
-    box-shadow 0.15s,
-    color 0.15s;
+    background 0.3s,
+    box-shadow 0.3s,
+    color 0.3s,
+    border-color 0.3s;
   min-height: 2.5em;
   display: flex;
   flex-direction: column;
@@ -163,21 +214,40 @@
   align-items: flex-start;
   touch-action: manipulation;
 }
+
+:host-context(body.dark-mode) .pony-timetable .class-chip {
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
 .pony-timetable .class-chip:hover {
   background: #f0f2f7;
   color: var(--accent, #3a5ad7);
   box-shadow: 0 2px 8px 0 rgba(58, 90, 215, 0.1);
 }
 
+:host-context(body.dark-mode) .pony-timetable .class-chip:hover {
+  box-shadow: 0 2px 8px 0 rgba(107, 138, 255, 0.3) !important;
+}
+
 .pony-timetable .chip-subject {
   font-size: 1.08em;
   color: #444;
   font-family: "Segoe UI", "Roboto", Arial, sans-serif;
+  transition: color 0.3s;
+}
+
+:host-context(body.dark-mode) .pony-timetable .chip-subject {
+  color: #e8e9ed !important;
 }
 
 .pony-timetable .chip-meta {
   font-size: 0.97em;
   color: #444444;
+  transition: color 0.3s;
+}
+
+:host-context(body.dark-mode) .pony-timetable .chip-meta {
+  color: #c8c9d3 !important;
 }
 
 /* Stronger highlight for current day */
@@ -188,6 +258,13 @@
   border-bottom: 3px solid var(--accent, #3a5ad7);
   position: relative;
   z-index: 2;
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+:host-context(body.dark-mode) .pony-timetable th.is-today {
+  background: #2d2e3a !important;
+  color: var(--accent) !important;
+  box-shadow: 0 2px 8px 0 rgba(107, 138, 255, 0.2) !important;
 }
 
 /* Stronger highlight for current period row */
@@ -199,6 +276,13 @@
   color: var(--accent, #3a5ad7);
   font-weight: 600;
   box-shadow: 0 2px 8px 0 rgba(58, 90, 215, 0.06);
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+:host-context(body.dark-mode) .pony-timetable tr.is-now-row > .period-col {
+  background: #2d2e3a !important;
+  color: var(--accent) !important;
+  box-shadow: 0 2px 8px 0 rgba(107, 138, 255, 0.2) !important;
 }
 
 .pony-timetable .cell.is-now {
@@ -209,15 +293,81 @@
   color: var(--accent, #3a5ad7);
   position: relative;
   z-index: 1;
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
 }
+
+:host-context(body.dark-mode) .pony-timetable .cell.is-now {
+  background: #2d2e3a !important;
+  color: var(--accent) !important;
+  box-shadow: 0 2px 8px 0 rgba(107, 138, 255, 0.2) !important;
+}
+
 /* Subtle row and column hover for clarity */
 .pony-timetable tr:hover td {
   background: #f5f6fa;
 }
+
+:host-context(body.dark-mode) .pony-timetable tr:hover td {
+  background: #2a2b35 !important;
+}
+
 .pony-timetable td:hover {
   background: #f0f2f7;
   color: var(--accent, #3a5ad7);
 }
+
+:host-context(body.dark-mode) .pony-timetable td:hover {
+  background: #2d2e3a !important;
+  color: var(--accent) !important;
+}
+/* Single day toggle styling */
+.single-day-toggle {
+  color: var(--text-main);
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s;
+}
+
+.single-day-toggle input[type="checkbox"] {
+  margin-left: 0.5em;
+  cursor: pointer;
+}
+
+/* Muted text */
+.muted {
+  color: #999;
+  transition: color 0.3s;
+}
+
+:host-context(body.dark-mode) .muted {
+  color: #666 !important;
+}
+
+/* Period column styling */
+.period-col {
+  transition: background 0.3s, color 0.3s;
+}
+
+.period-title {
+  font-weight: 600;
+  color: var(--text-main);
+  transition: color 0.3s;
+}
+
+.period-time {
+  font-size: 0.9em;
+  color: var(--text-soft);
+  transition: color 0.3s;
+}
+
+/* Cell notes */
+.cell-notes {
+  font-size: 0.85em;
+  color: var(--text-soft);
+  margin-top: 0.3em;
+  transition: color 0.3s;
+}
+
 /* existing styles ... */
 
 /* Remove old pony/primary highlights for Hello Kitty theme */

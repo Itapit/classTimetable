@@ -15,6 +15,18 @@
 	--shadow: 0 2px 16px 0 rgba(35,36,58,0.06);
 }
 
+/* Dark Mode Theme */
+body.dark-mode {
+	--primary: #e8e9ed;
+	--accent: #6b8aff;
+	--background: #1a1b26;
+	--surface: #24252f;
+	--border: #3a3b45;
+	--text-main: #e8e9ed;
+	--text-soft: #a0a1ab;
+	--shadow: 0 2px 16px 0 rgba(0,0,0,0.3);
+}
+
 body {
 	min-height: 100vh;
 	margin: 0;
@@ -22,7 +34,7 @@ body {
 	background: var(--background);
 	color: var(--text-main);
 	box-sizing: border-box;
-	transition: background 0.5s;
+	transition: background 0.3s, color 0.3s;
 	direction: rtl;
 }
 

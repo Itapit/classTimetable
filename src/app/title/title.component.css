@@ -5,8 +5,12 @@
 	font-style: italic;
 	text-align: center;
 	letter-spacing: 0.1px;
+	transition: color 0.3s;
 }
 
+body.dark-mode .daily-quote {
+	color: var(--text-soft);
+}
 
 .pony-title {
 	font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
@@ -16,4 +20,5 @@
 	letter-spacing: 0.5px;
 	margin-bottom: 0.5em;
 	padding-bottom: 0.1em;
+	transition: color 0.3s;
 }
