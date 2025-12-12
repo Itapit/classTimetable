@@ -3,6 +3,7 @@ import { TitleComponent } from './title/title.component';
 import { TimetableComponent } from './timetable/timetable.component';
 import { GroupSelectorComponent } from './group-selector/group-selector.component';
 import { CommonModule } from '@angular/common';
+import { UnderWorkComponent } from './under-work/under-work.component';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
     TitleComponent,
     TimetableComponent,
     GroupSelectorComponent,
+    UnderWorkComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
