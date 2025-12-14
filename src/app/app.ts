@@ -12,7 +12,6 @@ import { UnderWorkComponent } from './under-work/under-work.component';
     TitleComponent,
     TimetableComponent,
     GroupSelectorComponent,
-    UnderWorkComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
