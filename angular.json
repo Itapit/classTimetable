@@ -42,7 +42,7 @@
               "base": "docs",
               "browser": ""
             },
-            "baseHref": "/",
+            "baseHref": "/classTimetable/",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
